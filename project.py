@@ -5,6 +5,9 @@ from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
 
+#NEW IMPORTS FOR THIS STEP
+from flask import session as login_session
+import random, string
 
 #Connect to Database and create database session
 engine = create_engine('sqlite:///restaurantmenu.db')
@@ -136,7 +139,13 @@ def deleteMenuItem(restaurant_id,menu_id):
     else:
         return render_template('deleteMenuItem.html', item = itemToDelete)
 
-
+@app.route('/login')
+def showLogin():
+    state = ''.join(random.choice(string.ascii_uppercase +
+                                  string.digits)
+                    for x in range(32))
+    login_session['state'] = state
+    return "The current session state is %s"%login_session['state']
 
 
 if __name__ == '__main__':
